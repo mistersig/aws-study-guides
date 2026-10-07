@@ -9,17 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ground:#EDF0F2;
-  --panel:#FFFFFF;
-  --ink:#121A21;
-  --ink-soft:#4A565F;
-  --rule:#D2D9DE;
-  --accent:#17566B;
-  --accent-soft:#D9E8ED;
-  --signal:#A4610B;
-  --signal-soft:#F5E6D0;
-  --good:#2C6E52;
-  --good-soft:#DCEBE3;
+  --ground:#EDF0F2; --panel:#FFFFFF; --ink:#121A21; --ink-soft:#4A565F;
+  --rule:#D2D9DE; --accent:#17566B; --accent-soft:#D9E8ED;
+  --signal:#A4610B; --signal-soft:#F5E6D0; --good:#2C6E52; --good-soft:#DCEBE3;
   --shadow:rgba(18,26,33,.13);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -27,52 +19,31 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ground:#0D1318;
-    --panel:#161F26;
-    --ink:#DFE6EA;
-    --ink-soft:#8D9BA5;
-    --rule:#2A3740;
-    --accent:#63AEC4;
-    --accent-soft:#17323C;
-    --signal:#D7A057;
-    --signal-soft:#332715;
-    --good:#6FB893;
-    --good-soft:#15291F;
+    --ground:#0D1318; --panel:#161F26; --ink:#DFE6EA; --ink-soft:#8D9BA5;
+    --rule:#2A3740; --accent:#63AEC4; --accent-soft:#17323C;
+    --signal:#D7A057; --signal-soft:#332715; --good:#6FB893; --good-soft:#15291F;
     --shadow:rgba(0,0,0,.45);
   }
 }
 :root[data-theme="dark"]{
-  --ground:#0D1318;
-  --panel:#161F26;
-  --ink:#DFE6EA;
-  --ink-soft:#8D9BA5;
-  --rule:#2A3740;
-  --accent:#63AEC4;
-  --accent-soft:#17323C;
-  --signal:#D7A057;
-  --signal-soft:#332715;
-  --good:#6FB893;
-  --good-soft:#15291F;
+  --ground:#0D1318; --panel:#161F26; --ink:#DFE6EA; --ink-soft:#8D9BA5;
+  --rule:#2A3740; --accent:#63AEC4; --accent-soft:#17323C;
+  --signal:#D7A057; --signal-soft:#332715; --good:#6FB893; --good-soft:#15291F;
   --shadow:rgba(0,0,0,.45);
 }
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
 body{
-  margin:0;min-height:100%;
-  background:var(--ground);color:var(--ink);
+  margin:0;min-height:100%;background:var(--ground);color:var(--ink);
   font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  font-size:17px;line-height:1.55;
-  font-variant-numeric:tabular-nums;
+  font-size:17px;line-height:1.55;font-variant-numeric:tabular-nums;
 }
-.wrap{max-width:860px;margin:0 auto;padding:28px 20px 72px}
+.wrap{max-width:820px;margin:0 auto;padding:28px 20px 72px}
 
-/* ---- masthead ---- */
-.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
 h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
-.sub{color:var(--ink-soft);font-size:.9rem;margin:0}
+.sub{color:var(--ink-soft);font-size:.9rem;margin:0 0 22px}
 
-/* ---- controls ---- */
-.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .chip{
   font:inherit;font-size:.83rem;font-weight:500;
   border:1px solid var(--rule);background:var(--panel);color:var(--ink-soft);
@@ -81,8 +52,9 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 }
 .chip:hover{border-color:var(--accent);color:var(--ink)}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
-.chip:focus-visible,.btn:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 20px}
+.chip:focus-visible,.btn:focus-visible,.nav:focus-visible,.mark:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
 .btn{
   font:inherit;font-size:.85rem;font-weight:500;
   border:1px solid var(--rule);background:var(--panel);color:var(--ink);
@@ -92,51 +64,50 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 .spacer{flex:1 1 auto}
 .counter{color:var(--ink-soft);font-size:.85rem}
 
-/* ---- the deck ---- */
-.deckwrap{position:relative;margin-bottom:18px}
-.deckwrap::before,.deckwrap::after{
-  content:"";position:absolute;inset:0;border-radius:14px;
-  background:var(--panel);border:1px solid var(--rule);
-}
-.deckwrap::before{transform:translate(0,10px) scale(.982);opacity:.55}
-.deckwrap::after{transform:translate(0,5px) scale(.992);opacity:.8}
-.stage{
-  position:relative;z-index:1;
-  perspective:1600px;width:100%;border:0;background:none;padding:0;
-  cursor:pointer;display:block;text-align:left;font:inherit;color:inherit;
-  border-radius:14px;
-}
+/* ---- card: normal flow, grows to fit ---- */
 .card{
-  position:relative;width:100%;min-height:300px;
-  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.75,.3,1);
-}
-.stage[data-flipped="true"] .card{transform:rotateY(180deg)}
-.face{
-  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   background:var(--panel);border:1px solid var(--rule);border-radius:14px;
   box-shadow:0 2px 14px var(--shadow);
-  padding:26px 26px 54px;display:flex;flex-direction:column;
-  overflow-y:auto;
+  padding:26px;margin-bottom:14px;
 }
-.face.back{transform:rotateY(180deg)}
 .tag{
-  align-self:flex-start;font-size:.73rem;font-weight:600;color:var(--accent);
+  display:inline-block;font-size:.73rem;font-weight:600;color:var(--accent);
   background:var(--accent-soft);border-radius:5px;padding:3px 9px;margin-bottom:16px;
 }
-.q{font-size:1.24rem;font-weight:500;line-height:1.4;letter-spacing:-.008em;margin:0}
-.a{font-size:1.02rem;line-height:1.6;margin:0}
-.a ul{margin:0;padding-left:1.15em}
-.a li{margin-bottom:5px}
+.q{font-size:1.2rem;font-weight:500;line-height:1.45;letter-spacing:-.008em;margin:0;overflow-wrap:break-word}
+
+.reveal{
+  width:100%;font:inherit;font-size:.9rem;font-weight:500;cursor:pointer;
+  margin-top:22px;padding:11px;border-radius:8px;
+  border:1px dashed var(--rule);background:transparent;color:var(--ink-soft);
+}
+.reveal:hover{border-color:var(--accent);color:var(--accent)}
+
+.answer{margin-top:22px;padding-top:20px;border-top:1px solid var(--rule)}
+.a{font-size:1.02rem;line-height:1.62;overflow-wrap:break-word}
+.a ul{margin:0;padding-left:1.25em;list-style:disc}
+.a li{margin-bottom:7px;display:list-item}
+.a li:last-child{margin-bottom:0}
 .a li::marker{color:var(--accent)}
+.a b{font-weight:600}
 .a em{font-style:normal;background:var(--signal-soft);color:var(--ink);padding:0 3px;border-radius:3px}
-.a .note{display:block;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--ink-soft);font-size:.92rem}
-.hint{
-  position:absolute;left:26px;right:26px;bottom:18px;
-  color:var(--ink-soft);font-size:.78rem;border-top:1px solid var(--rule);padding-top:10px;
+.a .note{
+  display:block;margin-top:16px;padding-top:13px;border-top:1px solid var(--rule);
+  color:var(--ink-soft);font-size:.92rem;line-height:1.55;
 }
 
-/* ---- mark row ---- */
-.marks{display:flex;gap:8px;margin-bottom:26px}
+/* ---- navigation ---- */
+.nav-row{display:flex;gap:8px;margin-bottom:10px}
+.nav{
+  flex:1 1 0;font:inherit;font-size:.88rem;font-weight:500;cursor:pointer;
+  border:1px solid var(--rule);background:var(--panel);color:var(--ink);
+  border-radius:8px;padding:12px 8px;
+}
+.nav:hover{border-color:var(--accent)}
+.nav.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.nav.primary:hover{opacity:.9}
+
+.marks{display:flex;gap:8px;margin-bottom:24px}
 .mark{
   flex:1 1 0;font:inherit;font-size:.86rem;font-weight:500;cursor:pointer;
   border:1px solid var(--rule);background:var(--panel);color:var(--ink-soft);
@@ -145,13 +116,10 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 .mark.again:hover,.mark.again[data-on="true"]{background:var(--signal-soft);border-color:var(--signal);color:var(--signal)}
 .mark.got:hover,.mark.got[data-on="true"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
 
-/* ---- progress ---- */
-.bar{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin-bottom:9px}
-.bar span{display:block;height:100%;background:var(--good);width:0;transition:width .3s}
-.legend{display:flex;gap:18px;color:var(--ink-soft);font-size:.82rem;margin-bottom:40px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;color:var(--ink-soft);font-size:.82rem;margin-bottom:10px}
 .legend b{color:var(--ink);font-weight:600}
+.keys{color:var(--ink-soft);font-size:.78rem;margin-bottom:40px}
 
-/* ---- sources ---- */
 .sources{border-top:1px solid var(--rule);padding-top:26px}
 .sources h2{font-size:1rem;font-weight:600;margin:0 0 14px}
 .disclaimer{color:var(--ink-soft);font-size:.87rem;line-height:1.55;margin:0 0 12px}
@@ -165,51 +133,38 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 @media (max-width:560px){
   body{font-size:16px}
   .wrap{padding:20px 14px 56px}
-  .masthead{flex-direction:column;gap:12px}
-  .face{padding:20px 20px 50px}
-  .q{font-size:1.1rem}
-  .card{min-height:330px}
-}
-@media (prefers-reduced-motion:reduce){
-  .card,.bar span{transition:none}
+  .card{padding:20px}
+  .q{font-size:1.08rem}
+  .nav{padding:13px 6px;font-size:.84rem}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="masthead">
-    <div>
-      <h1>CLF-C02 Recall Deck</h1>
-      <p class="sub">Say the answer out loud before you flip. Recognition isn't recall.</p>
-    </div>
-  </header>
+  <h1>CLF-C02 Recall Deck</h1>
+  <p class="sub">Say the answer out loud before you reveal. Recognition isn't recall.</p>
 
   <div class="controls" id="filters"></div>
 
   <div class="toolbar">
     <button class="btn" id="shuffle" type="button">Shuffle</button>
     <button class="btn" id="onlyAgain" type="button">Review flagged only</button>
-    <button class="btn" id="reset" type="button">Clear marks</button>
     <span class="spacer"></span>
     <span class="counter" id="counter">—</span>
   </div>
 
-  <div class="deckwrap">
-    <button class="stage" id="stage" type="button" data-flipped="false" aria-live="polite">
-      <div class="card">
-        <div class="face front">
-          <span class="tag" id="tagF">—</span>
-          <p class="q" id="q">Loading…</p>
-          <div class="hint">Click, tap, or press Space to reveal</div>
-        </div>
-        <div class="face back">
-          <span class="tag" id="tagB">—</span>
-          <div class="a" id="a"></div>
-          <div class="hint">← → to move · 1 flag · 2 know it</div>
-        </div>
-      </div>
-    </button>
+  <div class="card">
+    <span class="tag" id="tag">—</span>
+    <p class="q" id="q">Loading…</p>
+    <button class="reveal" id="reveal" type="button">Reveal answer</button>
+    <div class="answer" id="answer" hidden><div class="a" id="a"></div></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav" id="prev" type="button">&larr; Previous</button>
+    <button class="nav" id="skip" type="button">Skip</button>
+    <button class="nav primary" id="next" type="button">Next &rarr;</button>
   </div>
 
   <div class="marks">
@@ -217,12 +172,12 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
     <button class="mark got" id="mGot" type="button">I know this</button>
   </div>
 
-  <div class="bar"><span id="barFill"></span></div>
   <div class="legend">
     <span><b id="nGot">0</b> known</span>
     <span><b id="nAgain">0</b> flagged</span>
-    <span><b id="nLeft">0</b> unmarked</span>
+    <span><b id="nSeen">0</b> seen this session</span>
   </div>
+  <p class="keys">Nothing is saved. Marks last for this session only and clear when you reload. &nbsp;·&nbsp; Keys: <b>Space</b> reveal &nbsp;<b>&larr; &rarr;</b> move &nbsp;<b>1</b> flag &nbsp;<b>2</b> know it &nbsp;<b>S</b> shuffle</p>
 
   <section class="sources">
     <h2>About this deck</h2>
@@ -232,16 +187,16 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 
     <h2 style="margin-top:28px">Sources this deck was built from</h2>
     <ol>
-      <li><b>AWS Certified Cloud Practitioner (CLF-C02) exam guide and official documentation</b> — the domain weights, service definitions, and current service names and statuses. <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/">aws.amazon.com/certification/certified-cloud-practitioner</a></li>
-      <li><b>A personal study-notes document</b> (uploaded markdown) — the original four-domain outline, trap list, and quick-fire contrast table that this deck grew out of.</li>
-      <li><b>AWS Certified Cloud Practitioner Certification Course 2026 (CLF-C02)</b> — Andrew Brown / freeCodeCamp, ~13.5 hours. <a href="https://www.youtube.com/watch?v=7HKot-brXFE">youtube.com/watch?v=7HKot-brXFE</a></li>
-      <li><b>ExamPro CLF-C02 course slides</b> — the slide deck accompanying the course above, covering shared responsibility, storage, databases, networking, integration, analytics, and machine learning. <a href="https://www.exampro.co/clf-c02">exampro.co/clf-c02</a></li>
-      <li><b>Learn 97% of AWS in Under 30 Minutes</b> — the ten-step ticket-platform architecture walkthrough that supplies the mental model behind the service-matching cards. <a href="https://www.youtube.com/watch?v=ujeEIbu_JxE">youtube.com/watch?v=ujeEIbu_JxE</a></li>
-      <li><b>The 10 cloud building blocks</b> — multi-cloud concept overview. <a href="https://www.youtube.com/watch?v=De4V2czb-8A">youtube.com/watch?v=De4V2czb-8A</a></li>
-      <li><b>Tutorials Dojo CLF-C02 practice exams and cheat sheets</b> — question style, explanations, and the misses that shaped the trap cards. <a href="https://tutorialsdojo.com/">tutorialsdojo.com</a></li>
-      <li><b>AWS Well-Architected Framework and Cloud Adoption Framework whitepapers</b> — the pillar and perspective wording. <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">Well-Architected</a> · <a href="https://aws.amazon.com/cloud-adoption-framework/">Cloud Adoption Framework</a></li>
+      <li><b>AWS Certified Cloud Practitioner (CLF-C02) exam guide and official AWS documentation</b> &mdash; domain weights, service definitions, and current service names and statuses. <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/">aws.amazon.com/certification/certified-cloud-practitioner</a></li>
+      <li><b>Personal study notes</b> &mdash; the original four-domain outline and trap list this deck grew out of.</li>
+      <li><b>AWS Certified Cloud Practitioner Certification Course 2026 (CLF-C02)</b> &mdash; Andrew Brown / freeCodeCamp. <a href="https://www.youtube.com/watch?v=7HKot-brXFE">youtube.com/watch?v=7HKot-brXFE</a></li>
+      <li><b>ExamPro CLF-C02 course slides</b> &mdash; shared responsibility, storage, databases, networking, integration, analytics, machine learning. <a href="https://www.exampro.co/clf-c02">exampro.co/clf-c02</a></li>
+      <li><b>Learn 97% of AWS in Under 30 Minutes</b> &mdash; the ticket-platform architecture walkthrough behind the service-matching cards. <a href="https://www.youtube.com/watch?v=ujeEIbu_JxE">youtube.com/watch?v=ujeEIbu_JxE</a></li>
+      <li><b>The 10 cloud building blocks</b> &mdash; multi-cloud concept overview. <a href="https://www.youtube.com/watch?v=De4V2czb-8A">youtube.com/watch?v=De4V2czb-8A</a></li>
+      <li><b>Tutorials Dojo CLF-C02 practice exams and cheat sheets</b> &mdash; question style and explanations. <a href="https://tutorialsdojo.com/">tutorialsdojo.com</a></li>
+      <li><b>AWS Well-Architected Framework and Cloud Adoption Framework whitepapers</b> &mdash; <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">Well-Architected</a> &middot; <a href="https://aws.amazon.com/cloud-adoption-framework/">Cloud Adoption Framework</a></li>
     </ol>
-    <p class="colophon">Where a source was out of date, the card follows current AWS documentation instead. The corrections carried into this deck: the Well-Architected Framework has <b>six</b> pillars, not five — Sustainability was added in 2021. Amazon CodeWhisperer is now <b>Amazon Q Developer</b>. Amazon Elasticsearch Service is now <b>Amazon OpenSearch Service</b>. Snowmobile, Snowcone, CloudEndure Disaster Recovery, RDS on VMware, Amazon WorkDocs, and Amazon Chime have all been retired or discontinued.</p>
+    <p class="colophon">Where a source was out of date, the cards follow current AWS documentation instead. The corrections carried into this deck: the Well-Architected Framework has <b>six</b> pillars, not five &mdash; Sustainability was added in 2021. Amazon CodeWhisperer is now <b>Amazon Q Developer</b>. Amazon Elasticsearch Service is now <b>Amazon OpenSearch Service</b>. Snowmobile, Snowcone, CloudEndure Disaster Recovery, RDS on VMware, Amazon WorkDocs, and Amazon Chime have all been retired or discontinued.</p>
   </section>
 
 </div>
@@ -385,59 +340,60 @@ const DECK = [
 {d:"Exam",q:"Name the four domains and their weights.",a:"<ul><li>Cloud Concepts — <b>24%</b></li><li>Security and Compliance — <b>30%</b></li><li>Cloud Technology and Services — <b>34%</b></li><li>Billing, Pricing and Support — <b>12%</b></li></ul>"},
 {d:"Exam",q:"How long is the certification valid, and what happens if you fail?",a:"Valid <b>3 years</b>. A failed attempt means a <b>14-calendar-day wait</b> and the full fee again. Rescheduling is free up to 24 hours before, twice per appointment.<span class='note'>Passing any AWS exam unlocks a 50% discount voucher toward the next one.</span>"}
 ];
-
-/* ---------- state ---------- */
-const KEY="clf-c02-deck-marks-v1";
-let marks={};
-try{const raw=localStorage.getItem(KEY); if(raw) marks=JSON.parse(raw)||{};}catch(e){marks={};}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(marks));}catch(e){}}
+/* ---------- session-only state: nothing is persisted ---------- */
+const marks = {};          // cleared on reload by design
+const seen  = new Set();
+let activeDomain="All", order=[], idx=0, revealed=false, flaggedOnly=false;
 
 const DOMAINS=[...new Set(DECK.map(c=>c.d))];
-let activeDomain="All", order=[], idx=0, flipped=false, flaggedOnly=false;
-
-/* ---------- build filters ---------- */
 const filters=document.getElementById("filters");
 ["All",...DOMAINS].forEach(d=>{
   const b=document.createElement("button");
   b.className="chip"; b.type="button"; b.textContent=d;
   b.setAttribute("aria-pressed", d==="All");
-  b.onclick=()=>{activeDomain=d; flaggedOnly=false; document.getElementById("onlyAgain").textContent="Review flagged only";
-    [...filters.children].forEach(c=>c.setAttribute("aria-pressed",c.textContent===d)); build();};
+  b.onclick=()=>{
+    activeDomain=d; flaggedOnly=false;
+    document.getElementById("onlyAgain").textContent="Review flagged only";
+    [...filters.children].forEach(c=>c.setAttribute("aria-pressed",c.textContent===d));
+    build(true);
+  };
   filters.appendChild(b);
 });
 
-function build(){
+function build(randomise){
   order=DECK.map((c,i)=>i).filter(i=>{
     const c=DECK[i];
     if(activeDomain!=="All" && c.d!==activeDomain) return false;
     if(flaggedOnly && marks[i]!=="again") return false;
     return true;
   });
-  idx=0; flipped=false; render();
+  if(randomise!==false) shuffleOrder();
+  idx=0; revealed=false; render();
 }
-function shuffle(){
+function shuffleOrder(){
   for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
-  idx=0; flipped=false; render();
 }
 
-const stage=document.getElementById("stage");
 function render(){
   const total=order.length;
+  const qEl=document.getElementById("q"), aEl=document.getElementById("a"),
+        ansEl=document.getElementById("answer"), revEl=document.getElementById("reveal");
   if(!total){
-    document.getElementById("q").textContent="No cards here yet.";
-    document.getElementById("a").innerHTML="Clear the filter, or flag some cards for review first.";
-    document.getElementById("tagF").textContent="—";
-    document.getElementById("tagB").textContent="—";
+    qEl.textContent="No cards match that filter.";
+    aEl.innerHTML=""; ansEl.hidden=true; revEl.hidden=true;
+    document.getElementById("tag").textContent="—";
     document.getElementById("counter").textContent="0 of 0";
   } else {
     const c=DECK[order[idx]];
-    document.getElementById("q").textContent=c.q;
-    document.getElementById("a").innerHTML=c.a;
-    document.getElementById("tagF").textContent=c.d;
-    document.getElementById("tagB").textContent=c.d;
+    seen.add(order[idx]);
+    qEl.textContent=c.q;
+    aEl.innerHTML=c.a;
+    document.getElementById("tag").textContent=c.d;
     document.getElementById("counter").textContent=(idx+1)+" of "+total;
+    revEl.hidden=false;
+    ansEl.hidden=!revealed;
+    revEl.textContent = revealed ? "Hide answer" : "Reveal answer";
   }
-  stage.dataset.flipped=flipped;
   const cur=total?order[idx]:null;
   document.getElementById("mAgain").dataset.on = cur!==null && marks[cur]==="again";
   document.getElementById("mGot").dataset.on   = cur!==null && marks[cur]==="got";
@@ -445,42 +401,49 @@ function render(){
 }
 function tally(){
   let g=0,a=0;
-  DECK.forEach((_,i)=>{if(marks[i]==="got")g++;else if(marks[i]==="again")a++;});
+  Object.values(marks).forEach(v=>{ if(v==="got")g++; else if(v==="again")a++; });
   document.getElementById("nGot").textContent=g;
   document.getElementById("nAgain").textContent=a;
-  document.getElementById("nLeft").textContent=DECK.length-g-a;
-  document.getElementById("barFill").style.width=(g/DECK.length*100)+"%";
+  document.getElementById("nSeen").textContent=seen.size;
 }
-function step(n){ if(!order.length) return; idx=(idx+n+order.length)%order.length; flipped=false; render(); }
+function step(n){
+  if(!order.length) return;
+  idx=(idx+n+order.length)%order.length;
+  revealed=false; render();
+  document.querySelector(".card").scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+function toggleReveal(){ if(!order.length) return; revealed=!revealed; render(); }
 function mark(kind){
   if(!order.length) return;
   const cur=order[idx];
-  marks[cur] = marks[cur]===kind ? undefined : kind;
-  if(marks[cur]===undefined) delete marks[cur];
-  save(); render(); setTimeout(()=>step(1),150);
+  if(marks[cur]===kind) delete marks[cur]; else marks[cur]=kind;
+  render(); setTimeout(()=>step(1),140);
 }
 
-stage.onclick=()=>{flipped=!flipped; stage.dataset.flipped=flipped;};
-document.getElementById("shuffle").onclick=shuffle;
-document.getElementById("reset").onclick=()=>{ marks={}; save(); if(flaggedOnly){flaggedOnly=false; document.getElementById("onlyAgain").textContent="Review flagged only";} build(); };
+document.getElementById("reveal").onclick=toggleReveal;
+document.getElementById("prev").onclick=()=>step(-1);
+document.getElementById("next").onclick=()=>step(1);
+document.getElementById("skip").onclick=()=>step(1);
+document.getElementById("shuffle").onclick=()=>{shuffleOrder(); idx=0; revealed=false; render();};
 document.getElementById("onlyAgain").onclick=e=>{
   flaggedOnly=!flaggedOnly;
   e.target.textContent = flaggedOnly ? "Show all cards" : "Review flagged only";
-  build();
+  build(true);
 };
 document.getElementById("mAgain").onclick=()=>mark("again");
 document.getElementById("mGot").onclick=()=>mark("got");
 
 document.addEventListener("keydown",e=>{
-  if(e.target.tagName==="INPUT") return;
-  if(e.key===" "||e.key==="Enter"){e.preventDefault(); flipped=!flipped; stage.dataset.flipped=flipped;}
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+  if(e.key===" "){e.preventDefault(); toggleReveal();}
   else if(e.key==="ArrowRight") step(1);
   else if(e.key==="ArrowLeft") step(-1);
   else if(e.key==="1") mark("again");
   else if(e.key==="2") mark("got");
+  else if(e.key==="s"||e.key==="S"){shuffleOrder(); idx=0; revealed=false; render();}
 });
 
-build();
+build(true);
 </script>
 </body>
 </html>
