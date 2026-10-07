@@ -70,11 +70,6 @@ body{
 .masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
 h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 .sub{color:var(--ink-soft);font-size:.9rem;margin:0}
-.countdown{
-  flex:none;text-align:right;color:var(--ink-soft);font-size:.82rem;line-height:1.35;
-  border-left:2px solid var(--rule);padding-left:14px;
-}
-.countdown b{display:block;color:var(--ink);font-size:1.5rem;font-weight:600;letter-spacing:-.02em}
 
 /* ---- controls ---- */
 .controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
@@ -159,6 +154,8 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
 /* ---- sources ---- */
 .sources{border-top:1px solid var(--rule);padding-top:26px}
 .sources h2{font-size:1rem;font-weight:600;margin:0 0 14px}
+.disclaimer{color:var(--ink-soft);font-size:.87rem;line-height:1.55;margin:0 0 12px}
+.disclaimer b{color:var(--ink);font-weight:600}
 .sources ol{margin:0;padding-left:1.3em;color:var(--ink-soft);font-size:.9rem}
 .sources li{margin-bottom:11px}
 .sources b{color:var(--ink);font-weight:600}
@@ -169,8 +166,6 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
   body{font-size:16px}
   .wrap{padding:20px 14px 56px}
   .masthead{flex-direction:column;gap:12px}
-  .countdown{text-align:left;border-left:0;border-top:2px solid var(--rule);padding:10px 0 0}
-  .countdown b{display:inline;font-size:1.1rem;margin-right:6px}
   .face{padding:20px 20px 50px}
   .q{font-size:1.1rem}
   .card{min-height:330px}
@@ -188,7 +183,6 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
       <h1>CLF-C02 Recall Deck</h1>
       <p class="sub">Say the answer out loud before you flip. Recognition isn't recall.</p>
     </div>
-    <div class="countdown"><b id="days">—</b>until the exam<br>Fri 9 Oct, 8:00 AM</div>
   </header>
 
   <div class="controls" id="filters"></div>
@@ -231,7 +225,12 @@ h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
   </div>
 
   <section class="sources">
-    <h2>Sources this deck was built from</h2>
+    <h2>About this deck</h2>
+    <p class="disclaimer"><b>Created for personal educational and study use.</b> This is an independent study aid. It is not affiliated with, endorsed by, sponsored by, or produced by Amazon Web Services, Inc. or any of the authors, instructors, or platforms listed below.</p>
+    <p class="disclaimer">All questions and answers here were written from scratch as original summaries and paraphrases. No text, slides, images, or exam questions have been copied or reproduced from any source. &ldquo;AWS&rdquo;, &ldquo;Amazon Web Services&rdquo;, and all AWS service names are trademarks of Amazon.com, Inc. or its affiliates, used here nominatively to describe the subject matter. Every other product and company name belongs to its respective owner.</p>
+    <p class="disclaimer">This deck contains <b>no real exam content</b>. AWS certification exam questions are confidential and protected by the AWS Certification Agreement, and nothing here is derived from them. Accuracy is not guaranteed &mdash; always verify against current official AWS documentation before relying on anything in a professional context.</p>
+
+    <h2 style="margin-top:28px">Sources this deck was built from</h2>
     <ol>
       <li><b>AWS Certified Cloud Practitioner (CLF-C02) exam guide and official documentation</b> — the domain weights, service definitions, and current service names and statuses. <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/">aws.amazon.com/certification/certified-cloud-practitioner</a></li>
       <li><b>A personal study-notes document</b> (uploaded markdown) — the original four-domain outline, trap list, and quick-fire contrast table that this deck grew out of.</li>
@@ -480,13 +479,6 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="1") mark("again");
   else if(e.key==="2") mark("got");
 });
-
-/* countdown */
-(function(){
-  const exam=new Date("2026-10-09T08:00:00-05:00");
-  const d=Math.max(0,Math.ceil((exam-new Date())/86400000));
-  document.getElementById("days").textContent = d===0 ? "Today" : d+(d===1?" day":" days");
-})();
 
 build();
 </script>
