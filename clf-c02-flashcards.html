@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CLF-C02 Recall Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#EDF0F2;
+  --panel:#FFFFFF;
+  --ink:#121A21;
+  --ink-soft:#4A565F;
+  --rule:#D2D9DE;
+  --accent:#17566B;
+  --accent-soft:#D9E8ED;
+  --signal:#A4610B;
+  --signal-soft:#F5E6D0;
+  --good:#2C6E52;
+  --good-soft:#DCEBE3;
+  --shadow:rgba(18,26,33,.13);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1318;
+    --panel:#161F26;
+    --ink:#DFE6EA;
+    --ink-soft:#8D9BA5;
+    --rule:#2A3740;
+    --accent:#63AEC4;
+    --accent-soft:#17323C;
+    --signal:#D7A057;
+    --signal-soft:#332715;
+    --good:#6FB893;
+    --good-soft:#15291F;
+    --shadow:rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1318;
+  --panel:#161F26;
+  --ink:#DFE6EA;
+  --ink-soft:#8D9BA5;
+  --rule:#2A3740;
+  --accent:#63AEC4;
+  --accent-soft:#17323C;
+  --signal:#D7A057;
+  --signal-soft:#332715;
+  --good:#6FB893;
+  --good-soft:#15291F;
+  --shadow:rgba(0,0,0,.45);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;
+  background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size:17px;line-height:1.55;
+  font-variant-numeric:tabular-nums;
+}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 72px}
+
+/* ---- masthead ---- */
+.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+h1{font-size:1.36rem;font-weight:600;letter-spacing:-.012em;margin:0 0 2px}
+.sub{color:var(--ink-soft);font-size:.9rem;margin:0}
+.countdown{
+  flex:none;text-align:right;color:var(--ink-soft);font-size:.82rem;line-height:1.35;
+  border-left:2px solid var(--rule);padding-left:14px;
+}
+.countdown b{display:block;color:var(--ink);font-size:1.5rem;font-weight:600;letter-spacing:-.02em}
+
+/* ---- controls ---- */
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chip{
+  font:inherit;font-size:.83rem;font-weight:500;
+  border:1px solid var(--rule);background:var(--panel);color:var(--ink-soft);
+  border-radius:999px;padding:6px 13px;cursor:pointer;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.chip:focus-visible,.btn:focus-visible,.stage:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 20px}
+.btn{
+  font:inherit;font-size:.85rem;font-weight:500;
+  border:1px solid var(--rule);background:var(--panel);color:var(--ink);
+  border-radius:7px;padding:7px 14px;cursor:pointer;
+}
+.btn:hover{border-color:var(--accent)}
+.spacer{flex:1 1 auto}
+.counter{color:var(--ink-soft);font-size:.85rem}
+
+/* ---- the deck ---- */
+.deckwrap{position:relative;margin-bottom:18px}
+.deckwrap::before,.deckwrap::after{
+  content:"";position:absolute;inset:0;border-radius:14px;
+  background:var(--panel);border:1px solid var(--rule);
+}
+.deckwrap::before{transform:translate(0,10px) scale(.982);opacity:.55}
+.deckwrap::after{transform:translate(0,5px) scale(.992);opacity:.8}
+.stage{
+  position:relative;z-index:1;
+  perspective:1600px;width:100%;border:0;background:none;padding:0;
+  cursor:pointer;display:block;text-align:left;font:inherit;color:inherit;
+  border-radius:14px;
+}
+.card{
+  position:relative;width:100%;min-height:300px;
+  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.75,.3,1);
+}
+.stage[data-flipped="true"] .card{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--panel);border:1px solid var(--rule);border-radius:14px;
+  box-shadow:0 2px 14px var(--shadow);
+  padding:26px 26px 54px;display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.face.back{transform:rotateY(180deg)}
+.tag{
+  align-self:flex-start;font-size:.73rem;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);border-radius:5px;padding:3px 9px;margin-bottom:16px;
+}
+.q{font-size:1.24rem;font-weight:500;line-height:1.4;letter-spacing:-.008em;margin:0}
+.a{font-size:1.02rem;line-height:1.6;margin:0}
+.a ul{margin:0;padding-left:1.15em}
+.a li{margin-bottom:5px}
+.a li::marker{color:var(--accent)}
+.a em{font-style:normal;background:var(--signal-soft);color:var(--ink);padding:0 3px;border-radius:3px}
+.a .note{display:block;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--ink-soft);font-size:.92rem}
+.hint{
+  position:absolute;left:26px;right:26px;bottom:18px;
+  color:var(--ink-soft);font-size:.78rem;border-top:1px solid var(--rule);padding-top:10px;
+}
+
+/* ---- mark row ---- */
+.marks{display:flex;gap:8px;margin-bottom:26px}
+.mark{
+  flex:1 1 0;font:inherit;font-size:.86rem;font-weight:500;cursor:pointer;
+  border:1px solid var(--rule);background:var(--panel);color:var(--ink-soft);
+  border-radius:8px;padding:10px;
+}
+.mark.again:hover,.mark.again[data-on="true"]{background:var(--signal-soft);border-color:var(--signal);color:var(--signal)}
+.mark.got:hover,.mark.got[data-on="true"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+
+/* ---- progress ---- */
+.bar{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin-bottom:9px}
+.bar span{display:block;height:100%;background:var(--good);width:0;transition:width .3s}
+.legend{display:flex;gap:18px;color:var(--ink-soft);font-size:.82rem;margin-bottom:40px}
+.legend b{color:var(--ink);font-weight:600}
+
+/* ---- sources ---- */
+.sources{border-top:1px solid var(--rule);padding-top:26px}
+.sources h2{font-size:1rem;font-weight:600;margin:0 0 14px}
+.sources ol{margin:0;padding-left:1.3em;color:var(--ink-soft);font-size:.9rem}
+.sources li{margin-bottom:11px}
+.sources b{color:var(--ink);font-weight:600}
+.sources a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.colophon{margin-top:22px;color:var(--ink-soft);font-size:.82rem;line-height:1.5}
+
+@media (max-width:560px){
+  body{font-size:16px}
+  .wrap{padding:20px 14px 56px}
+  .masthead{flex-direction:column;gap:12px}
+  .countdown{text-align:left;border-left:0;border-top:2px solid var(--rule);padding:10px 0 0}
+  .countdown b{display:inline;font-size:1.1rem;margin-right:6px}
+  .face{padding:20px 20px 50px}
+  .q{font-size:1.1rem}
+  .card{min-height:330px}
+}
+@media (prefers-reduced-motion:reduce){
+  .card,.bar span{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <h1>CLF-C02 Recall Deck</h1>
+      <p class="sub">Say the answer out loud before you flip. Recognition isn't recall.</p>
+    </div>
+    <div class="countdown"><b id="days">—</b>until the exam<br>Fri 9 Oct, 8:00 AM</div>
+  </header>
+
+  <div class="controls" id="filters"></div>
+
+  <div class="toolbar">
+    <button class="btn" id="shuffle" type="button">Shuffle</button>
+    <button class="btn" id="onlyAgain" type="button">Review flagged only</button>
+    <button class="btn" id="reset" type="button">Clear marks</button>
+    <span class="spacer"></span>
+    <span class="counter" id="counter">—</span>
+  </div>
+
+  <div class="deckwrap">
+    <button class="stage" id="stage" type="button" data-flipped="false" aria-live="polite">
+      <div class="card">
+        <div class="face front">
+          <span class="tag" id="tagF">—</span>
+          <p class="q" id="q">Loading…</p>
+          <div class="hint">Click, tap, or press Space to reveal</div>
+        </div>
+        <div class="face back">
+          <span class="tag" id="tagB">—</span>
+          <div class="a" id="a"></div>
+          <div class="hint">← → to move · 1 flag · 2 know it</div>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <div class="marks">
+    <button class="mark again" id="mAgain" type="button">Flag for review</button>
+    <button class="mark got" id="mGot" type="button">I know this</button>
+  </div>
+
+  <div class="bar"><span id="barFill"></span></div>
+  <div class="legend">
+    <span><b id="nGot">0</b> known</span>
+    <span><b id="nAgain">0</b> flagged</span>
+    <span><b id="nLeft">0</b> unmarked</span>
+  </div>
+
+  <section class="sources">
+    <h2>Sources this deck was built from</h2>
+    <ol>
+      <li><b>AWS Certified Cloud Practitioner (CLF-C02) exam guide and official documentation</b> — the domain weights, service definitions, and current service names and statuses. <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/">aws.amazon.com/certification/certified-cloud-practitioner</a></li>
+      <li><b>A personal study-notes document</b> (uploaded markdown) — the original four-domain outline, trap list, and quick-fire contrast table that this deck grew out of.</li>
+      <li><b>AWS Certified Cloud Practitioner Certification Course 2026 (CLF-C02)</b> — Andrew Brown / freeCodeCamp, ~13.5 hours. <a href="https://www.youtube.com/watch?v=7HKot-brXFE">youtube.com/watch?v=7HKot-brXFE</a></li>
+      <li><b>ExamPro CLF-C02 course slides</b> — the slide deck accompanying the course above, covering shared responsibility, storage, databases, networking, integration, analytics, and machine learning. <a href="https://www.exampro.co/clf-c02">exampro.co/clf-c02</a></li>
+      <li><b>Learn 97% of AWS in Under 30 Minutes</b> — the ten-step ticket-platform architecture walkthrough that supplies the mental model behind the service-matching cards. <a href="https://www.youtube.com/watch?v=ujeEIbu_JxE">youtube.com/watch?v=ujeEIbu_JxE</a></li>
+      <li><b>The 10 cloud building blocks</b> — multi-cloud concept overview. <a href="https://www.youtube.com/watch?v=De4V2czb-8A">youtube.com/watch?v=De4V2czb-8A</a></li>
+      <li><b>Tutorials Dojo CLF-C02 practice exams and cheat sheets</b> — question style, explanations, and the misses that shaped the trap cards. <a href="https://tutorialsdojo.com/">tutorialsdojo.com</a></li>
+      <li><b>AWS Well-Architected Framework and Cloud Adoption Framework whitepapers</b> — the pillar and perspective wording. <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">Well-Architected</a> · <a href="https://aws.amazon.com/cloud-adoption-framework/">Cloud Adoption Framework</a></li>
+    </ol>
+    <p class="colophon">Where a source was out of date, the card follows current AWS documentation instead. The corrections carried into this deck: the Well-Architected Framework has <b>six</b> pillars, not five — Sustainability was added in 2021. Amazon CodeWhisperer is now <b>Amazon Q Developer</b>. Amazon Elasticsearch Service is now <b>Amazon OpenSearch Service</b>. Snowmobile, Snowcone, CloudEndure Disaster Recovery, RDS on VMware, Amazon WorkDocs, and Amazon Chime have all been retired or discontinued.</p>
+  </section>
+
+</div>
+
+<script>
+const DECK = [
+{d:"Priority",q:"Name the Tier 1 topics — the ones you must know cold.",a:"<ul><li>Shared Responsibility Model</li><li>IAM — users, groups, roles, policies, least privilege, MFA, root user</li><li>EC2 and Lambda</li><li>S3 and EBS</li><li>RDS, DynamoDB, Aurora, ElastiCache</li><li>VPC basics — subnets, security groups vs. NACLs, public vs. private</li><li>Global infrastructure — Regions, Availability Zones, edge locations</li><li>Pricing models — On-Demand, Reserved, Savings Plans, Spot</li></ul><span class='note'>If time is short, this tier is the whole plan.</span>"},
+{d:"Priority",q:"Name the Tier 2 topics — understand conceptually, not at Tier 1 depth.",a:"<ul><li>Well-Architected Framework and its six pillars</li><li>CloudWatch, CloudTrail, AWS Config</li><li>Route 53 and CloudFront</li><li>SNS and SQS</li><li>KMS and encryption</li><li>AWS Organizations and consolidated billing</li><li>Migration strategies, Snow Family, Direct Connect</li><li>Cloud Adoption Framework</li><li>Support plans and cost tools</li></ul>"},
+{d:"Priority",q:"Name the Tier 3 topics — awareness level only.",a:"<ul><li>AI and machine learning: SageMaker, Lex, Kendra, Amazon Q, Bedrock</li><li>Containers: ECS, EKS, Fargate</li><li>DocumentDB, Keyspaces, Neptune, Redshift</li><li>Step Functions, EventBridge, Kinesis</li><li>Athena, Glue, EMR, QuickSight</li><li>Connect, WorkSpaces, Amplify, Cognito</li></ul><span class='note'>Don't skip this tier entirely — AWS now explicitly tests AI and machine learning services (Task 3.7 on the score report).</span>"},
+{d:"Priority",q:"What is this exam actually testing?",a:"<b>What a service does and when you would pick it over another</b> — not how to build with it.<span class='note'>This is a foundational certification. Depth is not the goal; coverage and discrimination are.</span>"},
+/* ========== DOMAIN 1 — CLOUD CONCEPTS ========== */
+{d:"Cloud Concepts",q:"Name the six advantages of cloud computing.",a:"<ul><li>Trade capital expense for variable expense</li><li>Benefit from massive economies of scale</li><li>Stop guessing capacity</li><li>Increase speed and agility</li><li>Stop spending money running and maintaining data centers</li><li>Go global in minutes</li></ul>"},
+{d:"Cloud Concepts",q:"A retailer no longer forecasts holiday server needs months ahead. Which advantage?",a:"<b>Stop guessing capacity.</b><span class='note'>If the stem mentions <em>price</em>, it's economies of scale. If it mentions <em>forecasting</em>, it's stop guessing capacity. No dollars in the stem means it is not the money answer.</span>"},
+{d:"Cloud Concepts",q:"AWS charges less per gigabyte than you could achieve buying disks yourself. Which advantage?",a:"<b>Benefit from massive economies of scale.</b> This is the price advantage — AWS's aggregate purchasing power lowers the per-unit cost."},
+{d:"Cloud Concepts",q:"Name the seven Rs of migration.",a:"<ul><li><b>Rehost</b> — lift and shift, no changes</li><li><b>Replatform</b> — lift, tinker, shift</li><li><b>Repurchase</b> — drop and shop, move to a different product</li><li><b>Refactor / Re-architect</b> — rewrite cloud-native</li><li><b>Retire</b> — decommission</li><li><b>Retain</b> — do nothing for now</li><li><b>Relocate</b> — move infrastructure wholesale (e.g. VMware to AWS)</li></ul>"},
+{d:"Cloud Concepts",q:"A company must exit a data center lease in 60 days, no code changes. Which migration strategy?",a:"<b>Rehost</b> (lift and shift).<span class='note'>Refactor is the classic distractor — most long-term benefit, but slowest and most expensive. Any mention of speed, a deadline, or no code change rules it out.</span>"},
+{d:"Cloud Concepts",q:"Name the six GENERAL design principles of the Well-Architected Framework.",a:"<ul><li>Stop guessing your capacity needs</li><li>Test systems at production scale</li><li>Automate to make architectural experimentation easier</li><li>Allow for evolutionary architectures</li><li>Drive architectures using data</li><li>Improve through game days</li></ul><span class='note'>Hook: S-T-A-A-D-I. These are separate from the pillars and from each pillar's own principles.</span>"},
+{d:"Cloud Concepts",q:"Name the six pillars of the Well-Architected Framework.",a:"Operational Excellence · Security · Reliability · Performance Efficiency · Cost Optimization · <b>Sustainability</b><span class='note'>Older material says five pillars. Sustainability was added in 2021 and is testable. If an option omits it, it is out of date.</span>"},
+{d:"Cloud Concepts",q:"Which pillar owns \"perform operations as code\", \"anticipate failure\", and \"learn from all operational failures\"?",a:"<b>Operational Excellence.</b><span class='note'>Reliability is the distractor — it is about recovering from failure once it happens. Operational Excellence is about the practices and procedures used to run the workload.</span>"},
+{d:"Cloud Concepts",q:"Name the five Operational Excellence design principles.",a:"<ul><li>Perform operations as code</li><li>Make frequent, small, reversible changes</li><li>Refine operations procedures frequently</li><li>Anticipate failure</li><li>Learn from all operational failures</li></ul>"},
+{d:"Cloud Concepts",q:"Name the five Reliability design principles.",a:"<ul><li>Automatically recover from failure</li><li>Test recovery procedures</li><li>Scale horizontally to increase aggregate workload availability</li><li>Stop guessing capacity</li><li>Manage change through automation</li></ul>"},
+{d:"Cloud Concepts",q:"Is \"Test recovery procedures\" a general design principle or a pillar principle?",a:"A <b>Reliability pillar</b> principle — not one of the six general design principles.<span class='note'>Two more collisions: \"Stop guessing capacity\" appears in BOTH lists. \"Go global in minutes\" is both a cloud advantage and a Performance Efficiency principle.</span>"},
+{d:"Cloud Concepts",q:"Name the five Performance Efficiency design principles.",a:"<ul><li>Democratize advanced technologies</li><li>Go global in minutes</li><li>Use serverless architectures</li><li>Experiment more often</li><li>Consider mechanical sympathy</li></ul>"},
+{d:"Cloud Concepts",q:"Name the five Cost Optimization design principles.",a:"<ul><li>Implement Cloud Financial Management</li><li>Adopt a consumption model</li><li>Measure overall efficiency</li><li>Stop spending money on undifferentiated heavy lifting</li><li>Analyze and attribute expenditure</li></ul>"},
+{d:"Cloud Concepts",q:"Name the six Cloud Adoption Framework perspectives.",a:"Business · People · Governance · Platform · Security · Operations<span class='note'>Hook: B-P-G-P-S-O. Also called the six focus areas.</span>"},
+{d:"Cloud Concepts",q:"Match stakeholder to CAF perspective: CFO, HR, enterprise architects, CTO, CISO, IT operations managers.",a:"<ul><li>Chief Financial Officer → <b>Business</b></li><li>Human Resources → <b>People</b></li><li>Enterprise architects, program managers → <b>Governance</b></li><li>Chief Technology Officer, architects, engineers → <b>Platform</b></li><li>Chief Information Security Officer → <b>Security</b></li><li>IT operations managers → <b>Operations</b></li></ul><span class='note'>The CIO appears in several perspectives, so it is rarely the deciding clue.</span>"},
+{d:"Cloud Concepts",q:"Name the four CAF phases in order, and what happens in each.",a:"<ul><li><b>Envision</b> — identify and prioritize transformation opportunities, tie to business outcomes</li><li><b>Align</b> — close capability gaps, align stakeholders</li><li><b>Launch</b> — deliver pilots in production</li><li><b>Scale</b> — expand pilots, sustain the business value</li></ul>"},
+{d:"Cloud Concepts",q:"Pilots are being delivered in production to show incremental value. Launch or Scale?",a:"<b>Launch.</b><span class='note'>If the word <em>pilot</em> is still in the sentence it's Launch. If pilots are being <em>expanded</em> or value <em>sustained</em>, it's Scale.</span>"},
+{d:"Cloud Concepts",q:"Scalability vs elasticity — what's the difference?",a:"<b>Scalability</b> means a system <em>can</em> grow. <b>Elasticity</b> means it grows AND shrinks automatically with demand.<span class='note'>If the stem mentions scaling down or removing capacity, it's elasticity every time.</span>"},
+{d:"Cloud Concepts",q:"High availability vs fault tolerance?",a:"<b>High availability</b> minimizes downtime through redundancy — a brief interruption during failover is acceptable. <b>Fault tolerance</b> means zero loss of function during a component failure.<span class='note'>Fault tolerance is the stronger claim and more expensive.</span>"},
+{d:"Cloud Concepts",q:"\"We can tolerate losing no more than 15 minutes of transactions.\" Which metric?",a:"<b>Recovery Point Objective (RPO).</b><span class='note'><b>RPO — P for Point</b>: a point in time you roll back to; the gap is lost <em>data</em>. <b>RTO — T for Time</b>: the clock running during the outage; that's <em>downtime</em>.</span>"},
+{d:"Cloud Concepts",q:"\"The order system must be restored within four hours.\" Which metric?",a:"<b>Recovery Time Objective (RTO)</b> — this measures downtime, not lost data."},
+{d:"Cloud Concepts",q:"A provider publishes 99.99% monthly uptime with service credits if missed. What is that?",a:"A <b>Service Level Agreement (SLA)</b>.<span class='note'>An SLA is given to you by a provider. RPO and RTO are targets your own organization sets — the giveaway is \"we can tolerate\" versus \"AWS guarantees\".</span>"},
+{d:"Cloud Concepts",q:"Name the three cloud deployment models.",a:"<b>Cloud</b> (all in AWS) · <b>Hybrid</b> (AWS plus your own data center) · <b>On-premises</b> (private cloud, everything in your own facility)"},
+{d:"Cloud Concepts",q:"A company keeps its data center and adds AWS with Local Zones. Which migration type?",a:"<b>On-premises to hybrid.</b><span class='note'>The data center stays, so it is not \"fully managed cloud\". Local Zones exist specifically to support hybrid architectures.</span>"},
+{d:"Cloud Concepts",q:"Infrastructure, Platform, and Software as a Service — who manages what?",a:"<ul><li><b>IaaS</b> — you manage the operating system, runtime, applications and data (e.g. EC2)</li><li><b>PaaS</b> — you manage applications and data; AWS manages the platform (e.g. Elastic Beanstalk)</li><li><b>SaaS</b> — you manage only your content and access settings</li></ul>"},
+{d:"Cloud Concepts",q:"Define Region, Availability Zone, and edge location.",a:"<ul><li><b>Region</b> — a geographic area containing multiple Availability Zones. Chosen for compliance, latency, price, and service availability</li><li><b>Availability Zone</b> — one or more discrete data centers with redundant power and networking; at least three per Region</li><li><b>Edge location</b> — hundreds worldwide; caches content for CloudFront, also serves Route 53 and Global Accelerator</li></ul>"},
+{d:"Cloud Concepts",q:"A healthcare provider must keep patient records physically inside Canada. What decision satisfies that?",a:"<b>Select an AWS Region located in Canada.</b><span class='note'>Region selection is the data residency and compliance lever. Availability Zones are for high availability; edge locations are for latency.</span>"},
+{d:"Cloud Concepts",q:"Local Zone vs Wavelength Zone vs Outposts?",a:"<ul><li><b>Local Zone</b> — extends a Region closer to large population centers for single-digit millisecond latency</li><li><b>Wavelength Zone</b> — AWS infrastructure inside 5G networks for mobile edge computing</li><li><b>Outposts</b> — AWS hardware racked in your own data center</li></ul>"},
+{d:"Cloud Concepts",q:"What is the standard answer for increasing resilience with the least operational overhead?",a:"<b>Deploy across multiple Availability Zones.</b><span class='note'>Multiple Regions = disaster recovery and data residency. Multiple <em>subnets</em> does NOT guarantee resilience — several subnets can sit in one Availability Zone.</span>"},
+
+/* ========== DOMAIN 2 — SECURITY AND COMPLIANCE ========== */
+{d:"Security",q:"State the Shared Responsibility Model in one line each.",a:"AWS secures <b>of</b> the cloud — physical data centers, hardware, network, virtualization layer.<br>You secure <b>in</b> the cloud — your data, access controls, and configuration."},
+{d:"Security",q:"Which three things never leave the customer, on any AWS service?",a:"<b>Your data · your IAM configuration · your data classification.</b><span class='note'>If an option says AWS handles IAM design, encryption key selection, or who can reach your resources, it is wrong by definition.</span>"},
+{d:"Security",q:"Who patches the operating system — on EC2, and on RDS?",a:"<b>EC2 → the customer.</b> <b>RDS → AWS.</b><span class='note'>Same task, opposite answer, decided entirely by which service the question names. This is the single most tested shared-responsibility trap.</span>"},
+{d:"Security",q:"Under the Shared Responsibility Model, what is the customer's entire scope on AWS Lambda?",a:"<b>Your code</b> (plus your data and access policies). AWS handles deployment, container runtime, networking, storage, security, and the physical machine."},
+{d:"Security",q:"Containers: when does AWS own the container instance operating system?",a:"Only on <b>AWS Fargate</b>. With ECS or EKS on the <b>EC2 launch type</b>, the customer still patches the underlying instances."},
+{d:"Security",q:"Name five facts about the AWS account root user.",a:"<ul><li>Created when the account is created; exactly one per account</li><li>Signs in with an <b>email address and password</b> (an IAM user needs account ID/alias + username)</li><li><b>Cannot be deleted</b></li><li>Permissions <b>cannot be limited by an IAM policy</b> — only by an Organizations service control policy</li><li>Enable Multi-Factor Authentication; never create root access keys</li></ul>"},
+{d:"Security",q:"Name the tasks ONLY the root user can perform.",a:"<ul><li>Change account settings (name, email, root password, root access keys)</li><li>Restore IAM user permissions when the only admin locks themselves out</li><li><b>Close the AWS account</b></li><li><b>Change or cancel the AWS Support plan</b></li><li>Activate IAM access to the Billing console; view certain tax invoices</li><li>Register as a seller in the Reserved Instance Marketplace</li><li>Enable MFA Delete on an S3 bucket; sign up for GovCloud</li></ul><span class='note'>The pattern: root is needed for anything affecting <em>the account itself</em> — its identity, billing relationship, or existence. Anything operational is an IAM user or role.</span>"},
+{d:"Security",q:"An application on EC2 needs to read from S3. What grants that access?",a:"<b>Attach an IAM role to the instance.</b><span class='note'>The universal reflex: anything accessing anything else gets a role. Any answer mentioning stored access keys, embedded credentials, or root credentials is wrong every time.</span>"},
+{d:"Security",q:"IAM role vs IAM user?",a:"A <b>role</b> carries temporary credentials and is assumed — used by services, applications, and cross-account access. A <b>user</b> is a persistent identity with long-lived credentials."},
+{d:"Security",q:"What is the Principle of Least Privilege, and its two dimensions?",a:"Grant the minimum permissions needed to perform a task.<ul><li><b>Just-Enough-Access (JEA)</b> — only the exact actions needed</li><li><b>Just-In-Time (JIT)</b> — only for the shortest duration needed</li></ul><span class='note'>This is why roles beat users for service access: temporary credentials satisfy both at once.</span>"},
+{d:"Security",q:"Security group vs network access control list — give all five differences.",a:"<ul><li><b>Level</b> — resource vs subnet</li><li><b>State</b> — stateful vs stateless</li><li><b>Rules</b> — allow only vs allow and deny</li><li><b>Evaluation</b> — all rules together vs numbered order, first match wins</li><li><b>Default</b> — deny all inbound vs default NACL allows all</li></ul>"},
+{d:"Security",q:"Why can't a security group block a specific IP address?",a:"A security group <b>implicitly denies everything</b> and you only write <em>allow</em> rules. There is no deny rule to write.<span class='note'>To block a specific address you need a network ACL, which supports both allow and deny rules.</span>"},
+{d:"Security",q:"What can a security group do that a network ACL cannot?",a:"<b>Reference another security group as its source.</b><span class='note'>That's how tiered architectures work — the app tier says \"allow from the web tier's security group\" rather than managing IP addresses.</span>"},
+{d:"Security",q:"Trace the inbound traffic path through a VPC, in order.",a:"Internet → <b>internet gateway</b> → router → <b>route table</b> → <b>network ACL</b> (subnet edge) → <b>security group</b> (resource edge) → EC2 instance<span class='note'>This is why a NACL can block an IP and a security group can't — the NACL sits one layer further out.</span>"},
+{d:"Security",q:"GuardDuty, Inspector, and Macie — what does each examine?",a:"<ul><li><b>GuardDuty</b> — <em>behavior</em>. Threat detection from log analysis (compromised credentials, crypto mining)</li><li><b>Inspector</b> — <em>software</em>. Vulnerability scanning for known CVEs</li><li><b>Macie</b> — <em>data</em>. Finds sensitive data (PII) in S3</li></ul><span class='note'>Behavior, software, data. <b>Security Hub</b> aggregates findings from all three.</span>"},
+{d:"Security",q:"AWS Artifact vs AWS Audit Manager?",a:"<b>Artifact</b> gives you <em>AWS's own</em> compliance reports (SOC, ISO, PCI DSS) for your auditor. <b>Audit Manager</b> assesses <em>your</em> workloads against a framework."},
+{d:"Security",q:"AWS Config vs AWS CloudTrail?",a:"<b>CloudTrail = who did what.</b> An audit log of API calls — identity, action, timestamp, source address. A security camera on the door.<br><b>Config = what does it look like, and is that allowed.</b> Records resource configuration over time and evaluates compliance. A building inspector.<span class='note'><em>Who / which user / when</em> → CloudTrail. <em>Compliant / configuration / changed over time / drift</em> → Config.</span>"},
+{d:"Security",q:"Name the five AWS Trusted Advisor check categories.",a:"Cost Optimization · Performance · Security · Fault Tolerance · Service Limits (Service Quotas)"},
+{d:"Security",q:"AWS KMS vs AWS CloudHSM?",a:"<b>KMS</b> — multi-tenant key management, FIPS 140-2 <b>Level 2</b>. The default answer for encryption keys.<br><b>CloudHSM</b> — dedicated single-tenant hardware security module, FIPS 140-2 <b>Level 3</b>.<span class='note'>If a stem demands dedicated single-tenant hardware or names Level 3, it's CloudHSM.</span>"},
+{d:"Security",q:"Which service stores a database password AND rotates it automatically?",a:"<b>AWS Secrets Manager.</b><span class='note'>KMS is the distractor — it manages encryption keys, not application credentials, and does not rotate secrets for you.</span>"},
+{d:"Security",q:"AWS WAF vs AWS Shield?",a:"<b>WAF</b> (Web Application Firewall) blocks application-layer attacks — SQL injection, cross-site scripting. Attaches to an Application Load Balancer, CloudFront, or API Gateway.<br><b>Shield</b> is Distributed Denial of Service protection — Standard is free and automatic, Advanced is paid."},
+{d:"Security",q:"What are the three parts of the CIA triad, and what does each mean?",a:"<ul><li><b>Confidentiality</b> — protect data from unauthorized viewers (encryption, envelope encryption)</li><li><b>Integrity</b> — keep data accurate and complete over its lifecycle</li><li><b>Availability</b> — information is there when needed (high availability, mitigating DDoS)</li></ul>"},
+{d:"Security",q:"Symmetric vs asymmetric encryption?",a:"<b>Symmetric</b> — one key encrypts and decrypts (e.g. Advanced Encryption Standard, AES).<br><b>Asymmetric</b> — two keys, one encrypts and one decrypts (e.g. Rivest–Shamir–Adleman, RSA)."},
+{d:"Security",q:"What is HIPAA, and what is PCI DSS?",a:"<b>HIPAA</b> — Health Insurance Portability and Accountability Act; United States legislation protecting medical information.<br><b>PCI DSS</b> — Payment Card Industry Data Security Standard; applies when handling credit card data.<span class='note'>You get AWS's attestations for both from <b>AWS Artifact</b>.</span>"},
+{d:"Security",q:"IAM vs Amazon Cognito — who does each manage?",a:"<b>IAM</b> manages <em>your team's</em> access to AWS resources.<br><b>Cognito</b> manages <em>your application's end users</em> — customers signing up and logging into an app you built.<span class='note'>Customers creating accounts in a mobile or web app → Cognito. Staff or services reaching AWS resources → IAM.</span>"},
+{d:"Security",q:"What is a service control policy, and what can it not do?",a:"An SCP sets the <b>maximum available permissions</b> for accounts in an AWS Organization. It is a guardrail, not a grant — it never gives permission by itself; an identity still needs an IAM policy allowing the action.<span class='note'>An SCP is also the only way to restrict the root user.</span>"},
+
+/* ========== DOMAIN 3 — TECHNOLOGY AND SERVICES ========== */
+{d:"Services",q:"Name the Core Four categories every AWS service sits in, and the question each answers.",a:"<ul><li><b>Compute</b> — raw processing power. Where does my application run?</li><li><b>Networking</b> — how everything connects</li><li><b>Storage</b> — where my data lives</li><li><b>Security</b> — who is allowed to do what</li></ul><span class='note'>Identify the category first and the candidate list drops from sixty services to about eight. Only then compare within the category.</span>"},
+{d:"Services",q:"Name the six questions to ask of any architecture, and the service group each points to.",a:"<ul><li>Where does it run? → <b>Compute</b></li><li>Where does it store data? → <b>Storage and databases</b></li><li>How does it communicate? → <b>Networking and integration</b></li><li>How is traffic distributed? → <b>Load balancing and scaling</b></li><li>Who has access? → <b>Identity and network security</b></li><li>How do I know when it breaks? → <b>Observability</b></li></ul><span class='note'>Question six is the one worth drilling: CloudWatch (metrics), CloudTrail (who did what), Config (is it compliant) all live in that one bucket.</span>"},
+{d:"Services",q:"What four things do you choose when launching an EC2 instance?",a:"<ul><li><b>Amazon Machine Image (AMI)</b> — the operating system template</li><li><b>Instance type</b> — family, generation, size (e.g. c5.4xlarge)</li><li><b>Storage</b> — EBS volumes or EFS</li><li><b>Configuration</b> — security groups, key pair, user data, IAM role, placement group</li></ul>"},
+{d:"Services",q:"What do the EC2 instance family letters mean?",a:"<ul><li><b>T, M</b> — general purpose</li><li><b>C</b> — compute optimized</li><li><b>R, X</b> — memory optimized</li><li><b>I, D, H</b> — storage optimized</li><li><b>P, G, Inf</b> — accelerated computing (GPUs)</li></ul><span class='note'>c5.4xlarge = family c, generation 5, size 4xlarge.</span>"},
+{d:"Services",q:"What are user data and a key pair on EC2?",a:"<b>User data</b> — a script that runs at first boot, used to install software or bootstrap configuration.<br><b>Key pair</b> — the public/private key used to connect. <em>AWS does not keep your private key</em> — lose it and you cannot recover it."},
+{d:"Services",q:"Name the five EC2 purchasing options and the label for each.",a:"<ul><li><b>On-Demand</b> — least commitment</li><li><b>Reserved Instances</b> — best long-term (1 or 3 years, specific family and Region)</li><li><b>Savings Plans</b> — flexible commitment, covers Lambda and Fargate too</li><li><b>Spot</b> — biggest savings, up to 90%, interruptible</li><li><b>Dedicated Hosts / Instances</b> — most expensive, buys isolation</li></ul>"},
+{d:"Services",q:"Rank the EC2 purchasing options from deepest discount to most expensive.",a:"Spot → Reserved Instances and Savings Plans → On-Demand → Dedicated<span class='note'>Learn the ranking, not the exact percentages — published figures vary by source and instance type.</span>"},
+{d:"Services",q:"The workload can be interrupted. The workload cannot be interrupted and is unpredictable. Which purchasing option each?",a:"Can be interrupted → <b>Spot</b>.<br>Cannot be interrupted, unpredictable → <b>On-Demand</b>.<span class='note'>Commitment language (\"1 or 3 years\", \"steady state\", \"predictable\") means Reserved or Savings Plans.</span>"},
+{d:"Services",q:"Name the three types of Savings Plans and what each covers.",a:"<ul><li><b>Compute Savings Plans</b> — any instance family, size, Region, OS, tenancy, <em>plus Lambda and Fargate</em>. Up to 66%</li><li><b>EC2 Instance Savings Plans</b> — one instance family in one Region. Up to 72%</li><li><b>SageMaker Savings Plans</b> — up to 64%</li></ul><span class='note'>If Lambda or Fargate appears in the stem, it must be <b>Compute</b> Savings Plans. Reserved Instances never cover those.</span>"},
+{d:"Services",q:"Name the three payment options for Savings Plans and Reserved Instances.",a:"<b>All Upfront</b> (cheapest) → <b>Partial Upfront</b> → <b>No Upfront</b> (most expensive)"},
+{d:"Services",q:"Block vs file vs object storage — name the AWS service and the key property of each.",a:"<ul><li><b>Block — Amazon EBS.</b> Attaches to <em>one instance at a time</em>. A virtual hard drive</li><li><b>File — Amazon EFS.</b> Multiple reads via a network share; writing locks the file. Shared drive</li><li><b>Object — Amazon S3.</b> Multiple reads and writes, no locks, virtually unlimited</li></ul>"},
+{d:"Services",q:"What are the scopes of EBS, EFS, and S3?",a:"<b>EBS</b> — one Availability Zone; a volume can only attach to an instance in that same zone.<br><b>EFS</b> — Regional, usable from multiple Availability Zones.<br><b>S3</b> — Regional.<span class='note'>Scope alone eliminates EBS from any question about shared access across Availability Zones.</span>"},
+{d:"Services",q:"When is Amazon FSx the answer instead of EFS?",a:"When the stem names <b>Windows file shares</b> (FSx for Windows File Server, uses SMB) or <b>high-performance computing</b> (FSx for Lustre, Linux)."},
+{d:"Services",q:"What is the durability of S3, and does it differ by storage class?",a:"<b>99.999999999% (11 nines) — the same for every class, including One Zone-IA.</b><span class='note'>What One Zone-IA loses is <em>resilience to an Availability Zone failure</em>, not the durability figure. Availability is what differs: Standard 99.99%, Standard-IA 99.9%, One Zone-IA 99.5%.</span>"},
+{d:"Services",q:"Name the S3 storage classes from most to least expensive.",a:"S3 Express One Zone → S3 Standard → Intelligent-Tiering → Standard-Infrequent Access → One Zone-Infrequent Access → Glacier Instant Retrieval → Glacier Flexible Retrieval → Glacier Deep Archive"},
+{d:"Services",q:"Access patterns are unknown or changing. Which S3 class?",a:"<b>S3 Intelligent-Tiering</b> — uses machine learning to move objects to the most cost-effective tier with no performance impact."},
+{d:"Services",q:"Cheapest possible storage, retrieval within 12 hours is fine. Which S3 class?",a:"<b>S3 Glacier Deep Archive</b> — lowest cost of any class, 12-hour standard retrieval (up to 48 bulk), for 7–10 year compliance archives."},
+{d:"Services",q:"How do you move objects between S3 storage classes automatically on a schedule?",a:"An <b>S3 Lifecycle policy</b> — this is a feature, not a storage class."},
+{d:"Services",q:"Ship a physical device · transfer over the network · hybrid local access · centralize backups. Which service for each?",a:"<ul><li>Physical shipping → <b>AWS Snowball Edge</b></li><li>Network transfer, automated or recurring → <b>AWS DataSync</b></li><li>On-premises app keeps local protocols → <b>AWS Storage Gateway</b></li><li>Centralize and automate backups across services → <b>AWS Backup</b></li></ul>"},
+{d:"Services",q:"Which Snow Family devices still exist?",a:"Only <b>Snowball Edge</b> — Storage Optimized (80 TB) and Compute Optimized (39.5 TB).<span class='note'>Snowmobile was retired April 2024 and Snowcone November 2024. For new migrations AWS points to <b>DataSync</b>.</span>"},
+{d:"Services",q:"Which service continuously replicates servers for fast recovery after a data center failure?",a:"<b>AWS Elastic Disaster Recovery (AWS DRS).</b><span class='note'>This replaced CloudEndure Disaster Recovery, which was discontinued in March 2024. If both appear, pick Elastic Disaster Recovery.</span>"},
+{d:"Services",q:"Lambda vs Fargate — when is each right?",a:"<b>Lambda</b> — a function, short tasks (15-minute maximum), event-driven, <em>costs nothing when idle</em>.<br><b>Fargate</b> — a container, long-running, no time limit, billed while tasks run.<span class='note'>\"No cost when nothing is happening\" → Lambda. \"Containers without managing servers\" → Fargate.</span>"},
+{d:"Services",q:"ECS vs EKS vs Fargate — how do they relate?",a:"<b>ECS</b> is AWS's own container orchestrator. <b>EKS</b> is managed Kubernetes. <b>Fargate is not a third orchestrator</b> — it's a <em>launch type</em> underneath ECS or EKS, the alternative to the EC2 launch type.<span class='note'>If a stem says Kubernetes, open source, or avoiding vendor lock-in → EKS.</span>"},
+{d:"Services",q:"What do Amazon ECR, AWS App Runner, and AWS X-Ray do?",a:"<ul><li><b>ECR</b> — Elastic Container Registry; stores and manages your container images</li><li><b>App Runner</b> — platform as a service for containerized web applications</li><li><b>X-Ray</b> — traces and debugs requests as they move between microservices</li></ul>"},
+{d:"Services",q:"Instances are the wrong size / wrong number / traffic hitting unhealthy ones. Which service fixes each?",a:"<ul><li>Wrong <b>size</b> → <b>AWS Compute Optimizer</b> (changes instance type)</li><li>Wrong <b>number</b> → <b>EC2 Auto Scaling</b> (changes count)</li><li>Uneven or unhealthy routing → <b>Elastic Load Balancing</b> (changes distribution)</li></ul><span class='note'>Each fixes exactly one and cannot fix the other two. Auto Scaling can never resolve over-provisioning.</span>"},
+{d:"Services",q:"What does AWS Elastic Beanstalk do, and what does it provision?",a:"A platform as a service — upload your code and AWS provisions the environment. Powered by CloudFormation underneath, it sets up Elastic Load Balancing, Auto Scaling groups, RDS, EC2 instances, and CloudWatch monitoring.<span class='note'>Comparable to Heroku. \"Just deploy my app\" → Beanstalk.</span>"},
+{d:"Services",q:"Name the six database engines Amazon RDS supports, plus Aurora.",a:"MySQL · MariaDB · PostgreSQL · Oracle · Microsoft SQL Server · <b>IBM Db2</b> — plus <b>Amazon Aurora</b><span class='note'>Db2 was added in late 2023. Oracle and SQL Server require purchased licenses.</span>"},
+{d:"Services",q:"What is Amazon Aurora, and how fast is it?",a:"AWS's own fully managed relational engine, compatible with <b>MySQL (up to 5x faster)</b> and <b>PostgreSQL (up to 3x faster)</b>.<span class='note'><b>Aurora Serverless</b> is the on-demand version — pick it when traffic is intermittent or unpredictable and cold starts are acceptable.</span>"},
+{d:"Services",q:"Thousands of lookups per second by a single identifier, no joins, single-digit millisecond. Which database?",a:"<b>Amazon DynamoDB</b> — serverless key-value and document, scales to billions of records with no shards to manage."},
+{d:"Services",q:"Which three AWS services are NoSQL, and how do you tell them apart?",a:"<ul><li><b>DynamoDB</b> — key-value and document. The default when no engine is named</li><li><b>DocumentDB</b> — MongoDB-compatible</li><li><b>Keyspaces</b> — Apache Cassandra-compatible</li></ul><span class='note'>If a specific engine is named, take the compatible service. Otherwise DynamoDB.</span>"},
+{d:"Services",q:"What is DynamoDB Accelerator (DAX)?",a:"An in-memory cache for DynamoDB that takes read latency from milliseconds to <b>microseconds</b>.<span class='note'>If a stem asks to speed up DynamoDB reads specifically, that's DAX rather than ElastiCache.</span>"},
+{d:"Services",q:"Match: data warehouse · in-memory cache · graph · ledger · time-series · migration.",a:"<ul><li>Data warehouse → <b>Amazon Redshift</b></li><li>In-memory cache → <b>Amazon ElastiCache</b> (durable version: <b>MemoryDB</b>)</li><li>Graph / relationships / fraud rings → <b>Amazon Neptune</b></li><li>Immutable ledger → <b>Amazon QLDB</b></li><li>Time-series / IoT metrics → <b>Amazon Timestream</b></li><li>Migrate databases with minimal downtime → <b>AWS DMS</b></li></ul>"},
+{d:"Services",q:"Name the components of a VPC and the level each operates at.",a:"<ul><li><b>VPC</b> — Regional, spans Availability Zones</li><li><b>Subnet</b> — lives in exactly <em>one</em> Availability Zone</li><li><b>Internet gateway</b> — VPC level, enables internet access</li><li><b>NAT gateway</b> — lets private-subnet resources reach out without being reachable</li><li><b>Route table</b> — subnet level, directs traffic</li><li><b>Security group</b> — resource level · <b>Network ACL</b> — subnet level</li></ul>"},
+{d:"Services",q:"Can resources in a private subnet reach AWS services?",a:"Yes. <b>Private does not mean cut off.</b> They reach out through a <b>NAT gateway</b> for internet-bound traffic, or a <b>VPC endpoint</b> to reach AWS services without traffic leaving the AWS network."},
+{d:"Services",q:"Route 53 · CloudFront · Global Accelerator — what does each do?",a:"<ul><li><b>Route 53</b> — domain registration and Domain Name System resolution</li><li><b>CloudFront</b> — content delivery network, caches at edge locations</li><li><b>Global Accelerator</b> — routes over the AWS backbone using static anycast IP addresses</li></ul>"},
+{d:"Services",q:"A secure connection to on-premises is needed within one week. Direct Connect or Site-to-Site VPN?",a:"<b>Site-to-Site VPN</b> — encrypted over the existing internet, configurable in hours.<span class='note'>Direct Connect is the better connection and the slower one to obtain — weeks to months. Any deadline in the stem rules it out.</span>"},
+{d:"Services",q:"Name the four Elastic Load Balancing types and when each applies.",a:"<ul><li><b>Application Load Balancer</b> — layer 7, HTTP/S, content-based routing rules, can attach a WAF</li><li><b>Network Load Balancer</b> — layers 3/4, TCP/UDP, extreme performance, static IP per Availability Zone</li><li><b>Gateway Load Balancer</b> — third-party virtual appliances</li><li><b>Classic Load Balancer</b> — legacy, built for the retired EC2-Classic network</li></ul>"},
+{d:"Services",q:"SQS vs Kinesis vs SNS — message lifetime and consumers?",a:"<ul><li><b>SQS</b> — message <em>deleted once consumed</em>; one consumer per message; consumers <b>pull</b></li><li><b>Kinesis</b> — events <em>persist</em> for a retention period; <b>many consumers read the same events</b>; real-time</li><li><b>SNS</b> — not stored; many subscribers get every message; AWS <b>pushes</b></li></ul><span class='note'>SQS consumers <em>ask</em>. SNS subscribers <em>are told</em>.</span>"},
+{d:"Services",q:"Name the four Amazon SNS subscriber types.",a:"<b>AWS Lambda · Amazon SQS · email · HTTP/S endpoints</b><span class='note'>Also SMS and mobile push. The SNS-to-SQS fanout pattern gives each downstream system its own copy to process at its own pace.</span>"},
+{d:"Services",q:"What does Amazon API Gateway do, and how does it differ from the messaging services?",a:"Creates secure APIs at any scale — the front door for applications to reach backend services. Provides throttling, logging, routing, request/response transformation, and caching.<span class='note'>API Gateway is <b>synchronous</b> — the caller waits for a reply. SQS, SNS and Kinesis are asynchronous hand-offs.</span>"},
+{d:"Services",q:"EventBridge vs Step Functions?",a:"<b>EventBridge routes</b> events to whatever should react — it doesn't care what happens next.<br><b>Step Functions sequences</b> a known set of steps in order, with retries and branching.<span class='note'>\"Route an event to interested consumers\" → EventBridge. \"Run step one, then step two, retry on failure\" → Step Functions.</span>"},
+{d:"Services",q:"When is Amazon MQ the answer instead of SQS?",a:"When an <b>existing application already speaks a standard broker protocol</b> (JMS, AMQP, MQTT) and is being migrated without rewriting the messaging code. Amazon MQ supports <b>ActiveMQ and RabbitMQ</b>.<span class='note'>Building something new on AWS → SQS. Same logic for MSK (existing Kafka) versus Kinesis (new streaming work).</span>"},
+{d:"Services",q:"What is AWS CloudFormation?",a:"AWS's native <b>infrastructure as code</b> service — define your whole environment in a JSON or YAML template so it can be rebuilt identically and tracked in version control.<span class='note'>CodeDeploy is the distractor — it deploys application code onto existing infrastructure.</span>"},
+{d:"Services",q:"CloudFormation vs Elastic Beanstalk vs OpsWorks?",a:"<b>CloudFormation</b> defines infrastructure as code. <b>Beanstalk</b> takes your code and provisions the environment. <b>OpsWorks</b> manages configuration on existing servers using <em>Chef and Puppet</em>.<span class='note'>Chef or Puppet named → OpsWorks.</span>"},
+{d:"Services",q:"What are the elements of AWS Organizations?",a:"<ul><li><b>Management account</b> — creates the organization, pays the consolidated bill (formerly \"master account\")</li><li><b>Member accounts</b></li><li><b>Organizational unit (OU)</b> — a group of accounts, can nest</li><li><b>Service control policy</b> — maximum available permissions</li></ul>"},
+{d:"Services",q:"Athena vs Redshift?",a:"<b>Athena</b> — serverless, queries files <em>in place</em> in S3 with SQL, no loading step, pay per query. Best for occasional queries.<br><b>Redshift</b> — a data warehouse; requires loading but is far faster for repeated complex analytics."},
+{d:"Services",q:"AWS Glue · Amazon EMR · AWS Lake Formation — what does each do?",a:"<ul><li><b>Glue</b> — serverless Extract, Transform, Load. The modern answer for ETL</li><li><b>EMR</b> — Elastic MapReduce; Hadoop and Spark, good at turning unstructured data into structured</li><li><b>Lake Formation</b> — builds a data lake: centralized, curated, secured raw data</li></ul>"},
+{d:"Services",q:"Name the four Kinesis services.",a:"<ul><li><b>Kinesis Data Streams</b> — real-time streaming, multiple consumers, you manage capacity</li><li><b>Kinesis Data Firehose</b> — serverless delivery into S3, Redshift, OpenSearch</li><li><b>Kinesis Data Analytics</b> — query data while it is still flowing</li><li><b>Kinesis Video Streams</b> — real-time video</li></ul>"},
+{d:"Services",q:"Match the AI service: images · text sentiment · speech to text · text to speech · scanned documents · chatbots.",a:"<ul><li>Images and video → <b>Rekognition</b></li><li>Text sentiment and entities → <b>Comprehend</b></li><li>Speech to text → <b>Transcribe</b></li><li>Text to speech → <b>Polly</b></li><li>Scanned documents → <b>Textract</b></li><li>Chatbots → <b>Lex</b></li></ul>"},
+{d:"Services",q:"Match: time-series forecasting · enterprise search · online fraud · generative AI · build and train models.",a:"<ul><li>Time-series forecasting → <b>Amazon Forecast</b></li><li>Enterprise search in natural language → <b>Amazon Kendra</b></li><li>Online payment fraud, fake accounts → <b>Amazon Fraud Detector</b></li><li>Generative AI, foundation models → <b>Amazon Bedrock</b></li><li>Build, train, deploy models → <b>Amazon SageMaker</b></li></ul>"},
+{d:"Services",q:"What are Amazon Connect, Amazon WorkSpaces, and Amazon QuickSight?",a:"<ul><li><b>Connect</b> — virtual call center; route callers, record calls</li><li><b>WorkSpaces</b> — virtual remote desktops, Windows or Linux</li><li><b>QuickSight</b> — business intelligence dashboards</li></ul><span class='note'>QuickSight is the <em>dashboard</em>; Redshift is the <em>warehouse</em> the data sits in.</span>"},
+{d:"Services",q:"Amazon SES vs Amazon Pinpoint?",a:"<b>SES</b> — transactional email sent from your application (order confirmations, password resets).<br><b>Pinpoint</b> — marketing campaigns: targeted segments, A/B testing, multi-step journeys, across email, SMS, push, and voice."},
+
+/* ========== DOMAIN 4 — BILLING, PRICING AND SUPPORT ========== */
+{d:"Billing",q:"Name the three AWS pricing fundamentals.",a:"<ul><li><b>Pay as you go</b> — pay only for what you use</li><li><b>Save when you reserve</b> — commit for 1 or 3 years for a discount</li><li><b>Pay less by using more</b> — volume-based tiered pricing</li></ul>"},
+{d:"Billing",q:"State the AWS data transfer rule.",a:"<b>Inbound is free. Outbound to the internet is charged.</b> Transfer within the same Availability Zone over private IP addresses is also free."},
+{d:"Billing",q:"Name the three AWS Free Tier categories.",a:"<ul><li><b>Always Free</b> — never expires (1 million Lambda requests/month, 25 GB DynamoDB, 62,000 SES emails/month)</li><li><b>12 Months Free</b> — from account creation (750 hours/month of t2.micro EC2, db.t2.micro RDS, Elastic Load Balancing)</li><li><b>Trials</b> — short-term, from service activation</li></ul>"},
+{d:"Billing",q:"Sort the cost tools by time direction.",a:"<ul><li><b>Pricing Calculator</b> — <em>future</em>: estimate a planned architecture</li><li><b>Cost Explorer</b> — <em>past</em>: visualize and analyze what you spent</li><li><b>Budgets</b> — <em>alerting</em>: notify me at a threshold I set</li><li><b>Cost and Usage Report</b> — <em>detail</em>: most granular raw billing data</li><li><b>Cost Anomaly Detection</b> — <em>automatic</em>: machine learning finds unusual spend, no threshold needed</li></ul>"},
+{d:"Billing",q:"Budgets vs Cost Anomaly Detection — what separates them?",a:"<b>Budgets</b> requires <em>you</em> to set the threshold. <b>Cost Anomaly Detection</b> uses machine learning to flag unusual spending with no threshold defined in advance.<span class='note'>\"Alert me at 80% of $10,000\" → Budgets. \"Find unusual spending automatically\" → Cost Anomaly Detection.</span>"},
+{d:"Billing",q:"Compute Optimizer and Cost Anomaly Detection both use machine learning. What's the difference?",a:"<b>Compute Optimizer</b> analyzes <em>utilization metrics</em> → your instances are the wrong size.<br><b>Cost Anomaly Detection</b> analyzes <em>cost and usage patterns</em> → your spending is unusual."},
+{d:"Billing",q:"Name the five AWS Support plans in order.",a:"<b>Basic</b> (free) → <b>Developer</b> → <b>Business</b> → <b>Enterprise On-Ramp</b> → <b>Enterprise</b>"},
+{d:"Billing",q:"Name the three discriminators that separate the support plans.",a:"<ul><li><b>Full Trusted Advisor checks start at Business</b> (Basic and Developer get only 7 core checks)</li><li><b>Any Technical Account Manager starts at Enterprise On-Ramp</b> (a pool); Enterprise gets a <em>designated</em> one</li><li><b>15 minutes means Enterprise, and only Enterprise</b>; Enterprise On-Ramp is 30 minutes</li></ul>"},
+{d:"Billing",q:"Give the support response times for production system down and business-critical system down.",a:"<b>Production system down</b> — 1 hour (Business and above).<br><b>Business-critical system down</b> — 30 minutes (Enterprise On-Ramp), <b>15 minutes</b> (Enterprise).<span class='note'>General guidance is 24 hours; system impaired is 12 hours; production system impaired is 4 hours.</span>"},
+{d:"Billing",q:"What is the primary cost benefit of consolidated billing under AWS Organizations?",a:"<b>Usage is aggregated across all accounts</b>, so combined volume reaches discount tiers no single account would reach, and Reserved Instances and Savings Plans can be shared.<span class='note'>It does not make services free and does not remove data transfer charges.</span>"},
+{d:"Billing",q:"Capital expenditure vs operational expenditure?",a:"<b>CapEx</b> — spending upfront on physical infrastructure: servers, storage, network gear, data center rent and cooling, technical staff. <em>You have to guess upfront.</em><br><b>OpEx</b> — ongoing non-physical costs: leasing software, training, support, billing based on usage. <em>Try a service without investing in equipment.</em><span class='note'>Moving to the cloud converts CapEx into OpEx — cloud advantage number one.</span>"},
+{d:"Billing",q:"How do you attribute AWS costs to specific teams, projects, or environments?",a:"<b>Cost allocation tags</b>, viewed through Cost Explorer or the Cost and Usage Report."},
+{d:"Billing",q:"What is AWS Marketplace?",a:"A <b>digital catalog</b> of third-party software listings from independent vendors that you can find, buy, test, and deploy on AWS."},
+
+/* ========== EXAM MECHANICS ========== */
+{d:"Exam",q:"How many questions, how long, and what is the passing score?",a:"<b>65 questions</b> — 50 scored, 15 unscored pretest. <b>90 minutes.</b> Scaled 100–1,000, <b>passing is 700</b>.<span class='note'>One aggregate score — there is no per-domain passing bar.</span>"},
+{d:"Exam",q:"Name the four domains and their weights.",a:"<ul><li>Cloud Concepts — <b>24%</b></li><li>Security and Compliance — <b>30%</b></li><li>Cloud Technology and Services — <b>34%</b></li><li>Billing, Pricing and Support — <b>12%</b></li></ul>"},
+{d:"Exam",q:"How long is the certification valid, and what happens if you fail?",a:"Valid <b>3 years</b>. A failed attempt means a <b>14-calendar-day wait</b> and the full fee again. Rescheduling is free up to 24 hours before, twice per appointment.<span class='note'>Passing any AWS exam unlocks a 50% discount voucher toward the next one.</span>"}
+];
+
+/* ---------- state ---------- */
+const KEY="clf-c02-deck-marks-v1";
+let marks={};
+try{const raw=localStorage.getItem(KEY); if(raw) marks=JSON.parse(raw)||{};}catch(e){marks={};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(marks));}catch(e){}}
+
+const DOMAINS=[...new Set(DECK.map(c=>c.d))];
+let activeDomain="All", order=[], idx=0, flipped=false, flaggedOnly=false;
+
+/* ---------- build filters ---------- */
+const filters=document.getElementById("filters");
+["All",...DOMAINS].forEach(d=>{
+  const b=document.createElement("button");
+  b.className="chip"; b.type="button"; b.textContent=d;
+  b.setAttribute("aria-pressed", d==="All");
+  b.onclick=()=>{activeDomain=d; flaggedOnly=false; document.getElementById("onlyAgain").textContent="Review flagged only";
+    [...filters.children].forEach(c=>c.setAttribute("aria-pressed",c.textContent===d)); build();};
+  filters.appendChild(b);
+});
+
+function build(){
+  order=DECK.map((c,i)=>i).filter(i=>{
+    const c=DECK[i];
+    if(activeDomain!=="All" && c.d!==activeDomain) return false;
+    if(flaggedOnly && marks[i]!=="again") return false;
+    return true;
+  });
+  idx=0; flipped=false; render();
+}
+function shuffle(){
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  idx=0; flipped=false; render();
+}
+
+const stage=document.getElementById("stage");
+function render(){
+  const total=order.length;
+  if(!total){
+    document.getElementById("q").textContent="No cards here yet.";
+    document.getElementById("a").innerHTML="Clear the filter, or flag some cards for review first.";
+    document.getElementById("tagF").textContent="—";
+    document.getElementById("tagB").textContent="—";
+    document.getElementById("counter").textContent="0 of 0";
+  } else {
+    const c=DECK[order[idx]];
+    document.getElementById("q").textContent=c.q;
+    document.getElementById("a").innerHTML=c.a;
+    document.getElementById("tagF").textContent=c.d;
+    document.getElementById("tagB").textContent=c.d;
+    document.getElementById("counter").textContent=(idx+1)+" of "+total;
+  }
+  stage.dataset.flipped=flipped;
+  const cur=total?order[idx]:null;
+  document.getElementById("mAgain").dataset.on = cur!==null && marks[cur]==="again";
+  document.getElementById("mGot").dataset.on   = cur!==null && marks[cur]==="got";
+  tally();
+}
+function tally(){
+  let g=0,a=0;
+  DECK.forEach((_,i)=>{if(marks[i]==="got")g++;else if(marks[i]==="again")a++;});
+  document.getElementById("nGot").textContent=g;
+  document.getElementById("nAgain").textContent=a;
+  document.getElementById("nLeft").textContent=DECK.length-g-a;
+  document.getElementById("barFill").style.width=(g/DECK.length*100)+"%";
+}
+function step(n){ if(!order.length) return; idx=(idx+n+order.length)%order.length; flipped=false; render(); }
+function mark(kind){
+  if(!order.length) return;
+  const cur=order[idx];
+  marks[cur] = marks[cur]===kind ? undefined : kind;
+  if(marks[cur]===undefined) delete marks[cur];
+  save(); render(); setTimeout(()=>step(1),150);
+}
+
+stage.onclick=()=>{flipped=!flipped; stage.dataset.flipped=flipped;};
+document.getElementById("shuffle").onclick=shuffle;
+document.getElementById("reset").onclick=()=>{ marks={}; save(); if(flaggedOnly){flaggedOnly=false; document.getElementById("onlyAgain").textContent="Review flagged only";} build(); };
+document.getElementById("onlyAgain").onclick=e=>{
+  flaggedOnly=!flaggedOnly;
+  e.target.textContent = flaggedOnly ? "Show all cards" : "Review flagged only";
+  build();
+};
+document.getElementById("mAgain").onclick=()=>mark("again");
+document.getElementById("mGot").onclick=()=>mark("got");
+
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key===" "||e.key==="Enter"){e.preventDefault(); flipped=!flipped; stage.dataset.flipped=flipped;}
+  else if(e.key==="ArrowRight") step(1);
+  else if(e.key==="ArrowLeft") step(-1);
+  else if(e.key==="1") mark("again");
+  else if(e.key==="2") mark("got");
+});
+
+/* countdown */
+(function(){
+  const exam=new Date("2026-10-09T08:00:00-05:00");
+  const d=Math.max(0,Math.ceil((exam-new Date())/86400000));
+  document.getElementById("days").textContent = d===0 ? "Today" : d+(d===1?" day":" days");
+})();
+
+build();
+</script>
+</body>
+</html>
